@@ -1,0 +1,40 @@
+name: nhc
+summary: LBNL Node Health Check (NHC)
+
+maintainers:
+    - OmniVector Solutions <admin@omnivector.solutions>
+description: |
+    'TORQUE, Slurm, and other schedulers/resource managers provide for a periodic
+    "node health check" to be performed on each compute node to verify that the
+    node is working properly. Nodes which are determined to be "unhealthy"
+    can be marked as down or offline so as to prevent jobs from being scheduled or
+    run on them. This helps increase the reliability and throughput of a cluster
+    by reducing preventable job failures due to misconfiguration, hardware failure, etc.'
+
+subordinate: true
+
+tags:
+    - slurm
+    - hpc
+    - nhc
+    - health
+
+series:
+    - focal
+    - bionic
+    - centos7
+
+requires:
+  juju-info:
+    interface: juju-info
+    scope: container
+
+provides:
+  nhc:
+    interface: nhc
+
+resources:
+  nhc:
+    type: file
+    filename: nhc.snap
+    description: nhc snap

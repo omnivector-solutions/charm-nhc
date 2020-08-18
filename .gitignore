@@ -1,0 +1,4 @@
+.tox/
+*.charm
+*.snap
+build/

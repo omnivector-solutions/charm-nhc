@@ -1,0 +1,3 @@
+SLURM_CONF={slurm_conf}
+SLURM_SINFO={sinfo}
+SLURM_SCONTROL={scontrol}

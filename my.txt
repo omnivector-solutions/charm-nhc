@@ -1,0 +1,2 @@
+* || check_hw_mem_free 1mb
+#   * || check_ps_service -r auditd
