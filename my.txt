@@ -1,7 +1,0 @@
-# NHC Configuration File (sample)
- 
-  * || check_hw_mem_free 1mb
-
-  * || check_ps_service -c mysqld
-
-# endof file 
