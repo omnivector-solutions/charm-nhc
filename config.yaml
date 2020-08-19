@@ -1,7 +1,10 @@
 options:
   nhc-config:
     type: string
-    default: ""
+    default: |
+      # NHC Configuration File (sample)
+        * || check_hw_mem_free 1mb
+      # endof file
     description: >-
       'User supplied nhc confinguration'
   health-check-interval:
