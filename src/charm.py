@@ -33,6 +33,7 @@ class NhcCharm(CharmBase):
         self._nhc_ops_manager = NhcOpsManager()
 
         self.framework.observe(self.on.install, self._on_install)
+        self.framework.observe(self.on.update_status, self._on_update_status)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
 
         self.framework.observe(
@@ -61,6 +62,9 @@ class NhcCharm(CharmBase):
                 "Nhc snap resource not found!"
             )
             event.defer()
+
+    def _on_update_status(self, event):
+        self.unit.status = ActiveStatus("")
 
     def _on_config_changed(self, event):
         conf = self.model.config
