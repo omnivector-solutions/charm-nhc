@@ -53,3 +53,14 @@ class NhcOpsManager:
                 **slurm_info
             )
         )
+
+    def set_nhc_debug(self, debug):
+        nhc_debug = "false"
+        if debug is True:
+            nhc_debug = "true"
+        subprocess.call([
+            "snap",
+            "set",
+            "nhc",
+            "debug={nhc_debug}",
+        ])

@@ -1,4 +1,9 @@
 options:
+  debug:
+    type: boolean
+    default: false
+    description: >-
+      'Enable/disable nhc debug logging.'
   nhc-config:
     type: string
     default: ""

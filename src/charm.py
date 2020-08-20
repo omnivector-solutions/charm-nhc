@@ -80,6 +80,8 @@ class NhcCharm(CharmBase):
                 health_check_node_state=health_check_node_state,
             )
 
+        self._nhc_ops_manager.set_nhc_debug(conf.get('debug'))
+
     def _on_slurm_info_changed(self, event):
         if not self._stored.nhc_installed:
             event.defer()
