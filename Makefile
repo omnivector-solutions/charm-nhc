@@ -10,6 +10,9 @@ clean: ## Remove .tox and build dirs
 push-charm-to-edge: ## Push charm to edge s3
 	@./scripts/push_charm.sh edge
 
+pull-charm-from-edge: ## Pull nhc.charm from edge s3
+	@wget https://omnivector-public-assets.s3-us-west-2.amazonaws.com/charms/nhc/edge/nhc.charm
+
 pull-snap-from-edge: ## Pull snap from edge s3
 	@./scripts/pull_snap.sh edge
 
