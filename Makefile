@@ -7,6 +7,9 @@ clean: ## Remove .tox and build dirs
 	rm -rf venv/
 	rm -rf build/
 
+push-charm-to-edge: ## Push charm to edge s3
+	@./scripts/push_charm.sh edge
+
 pull-snap-from-edge: ## Pull snap from edge s3
 	@./scripts/pull_snap.sh edge
 
