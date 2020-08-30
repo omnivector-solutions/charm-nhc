@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """SlurmctldCharm."""
 import copy
+import logging
+from pathlib import Path
 
 
 from nhc_ops_manager import NhcOpsManager
@@ -12,7 +14,11 @@ from ops.model import (
     ActiveStatus,
     BlockedStatus,
     ModelError,
+    WaitingStatus,
 )
+
+
+logger = logging.getLogger()
 
 
 class NhcCharm(CharmBase):
@@ -25,7 +31,6 @@ class NhcCharm(CharmBase):
         super().__init__(*args)
 
         self._stored.set_default(
-            nhc_installed=False,
             slurm_info=dict()
         )
 
@@ -47,16 +52,18 @@ class NhcCharm(CharmBase):
         )
 
     def _on_install(self, event):
+        nhc_snap_resource_path = None
         try:
             nhc_snap_resource_path = self.model.resources.fetch('nhc')
         except ModelError as e:
-            print(f"Cannot find resource - {e}")
-            nhc_snap_resource_path = None
+            logger.debug(f"Cannot find snap resource - {e}")
 
         if nhc_snap_resource_path is not None:
+            msg = "Installing the NHC snap..."
+            logger.debug(msg)
+            self.unit.status = WaitingStatus(msg)
             self._nhc_ops_manager.install(nhc_snap_resource_path)
-            self._stored.nhc_installed = True
-            self.unit.status = ActiveStatus("NHC installed")
+            Path(".installed").touch()
         else:
             self.unit.status = BlockedStatus(
                 "Nhc snap resource not found!"
@@ -69,7 +76,10 @@ class NhcCharm(CharmBase):
     def _on_config_changed(self, event):
         conf = self.model.config
 
-        if not self._stored.nhc_installed:
+        if not Path(".installed").exists():
+            self.unit.status = WaitingStatus(
+                "Waiting on nhc to finish installing..."
+            )
             event.defer()
             return
 
@@ -85,9 +95,10 @@ class NhcCharm(CharmBase):
             )
 
         self._nhc_ops_manager.set_nhc_debug(conf.get('debug'))
+        self.unit.status = ActiveStatus("Config update complete")
 
     def _on_slurm_info_changed(self, event):
-        if not self._stored.nhc_installed:
+        if not Path(".installed").exists():
             event.defer()
             return
 

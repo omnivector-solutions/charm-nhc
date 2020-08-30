@@ -55,6 +55,7 @@ class NhcOpsManager:
         )
 
     def set_nhc_debug(self, debug):
+        """Set nhc debug logging."""
         nhc_debug = "false"
         if debug is True:
             nhc_debug = "true"
@@ -62,5 +63,5 @@ class NhcOpsManager:
             "snap",
             "set",
             "nhc",
-            "debug={nhc_debug}",
+            f"debug={nhc_debug}",
         ])
