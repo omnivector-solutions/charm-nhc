@@ -16,7 +16,7 @@ charmcraft build --from ./charm-nhc
 # A NHC snap
 wget https://omnivector-public-assets.s3-us-west-2.amazonaws.com/snaps/nhc/edge/nhc_1.4.2-omni_amd64.snap -O nhc.snap
 
-juju deploy nhc.charm
+juju deploy nhc.charm --resource nhc=./nhc.snap
 juju relate <primary charm> nhc
 ```
 

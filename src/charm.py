@@ -88,7 +88,8 @@ class NhcCharm(CharmBase):
             event.defer()
             return
 
-        logging.debug(f'_on_config_changed(): {conf['nhc-config-autodetect']}')
+        config_auto = conf['nhc-config-autodetect']
+        logging.debug(f'_on_config_changed(): config_auto={config_auto}')
         
         # Write the nhc config
         self._nhc_ops_manager.write_nhc_config(conf['nhc-config'])
