@@ -36,8 +36,8 @@ Default paths to the log and config files are `/var/snap/nhc/common/var/log/nhc/
 
 ### Autogenerate a config file
 ```bash
-/snap/nhc/x1/usr/sbin/nhc-genconf -c ~/myconf.conf \
-INCDIR=/snap/nhc/x1/usr/etc/nhc/scripts/ \
+/snap/nhc/current/usr/sbin/nhc-genconf -c ~/myconf.conf \
+INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
 HELPERDIR=/var/snap/nhc/common/usr/lib/nhc
 ```
 

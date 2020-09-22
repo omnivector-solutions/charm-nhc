@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 """NHC Provides."""
+import logging
 from ops.framework import (
     EventBase,
     EventSource,
     Object,
     ObjectEvents,
 )
+
+logger = logging.getLogger()
 
 
 class SlurmInfoAvailableEvent(EventBase):
