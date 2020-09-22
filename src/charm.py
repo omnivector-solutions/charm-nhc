@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""NodeHealthCheckCharm"""
+"""NodeHealthCheckCharm."""
 import copy
 import logging
 from pathlib import Path
@@ -20,7 +20,7 @@ from ops.model import (
 
 logger = logging.getLogger()
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 
 class NhcCharm(CharmBase):
@@ -90,7 +90,7 @@ class NhcCharm(CharmBase):
 
         config_auto = conf['nhc-config-autodetect']
         logging.debug(f'_on_config_changed(): config_auto={config_auto}')
-        
+
         # Write the nhc config
         self._nhc_ops_manager.write_nhc_config(config_auto, conf['nhc-config'])
         # Update relation data with config values if we are the leader

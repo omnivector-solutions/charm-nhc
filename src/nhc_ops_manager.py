@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """NhcOpsManager."""
+import logging
 import os
 import subprocess
 import sys
-import logging
 from pathlib import Path
 
 logger = logging.getLogger()
