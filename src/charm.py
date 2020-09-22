@@ -74,6 +74,7 @@ class NhcCharm(CharmBase):
         self.unit.status = ActiveStatus("")
 
     def _on_config_changed(self, event):
+        logging.debug('_on_config_changed(): entering')
         conf = self.model.config
 
         if not Path(".installed").exists():
@@ -83,6 +84,8 @@ class NhcCharm(CharmBase):
             event.defer()
             return
 
+        logging.debug(f'_on_config_changed(): {conf['nhc-config-autodetect']}')
+        
         # Write the nhc config
         self._nhc_ops_manager.write_nhc_config(conf['nhc-config'])
         # Update relation data with config values if we are the leader
