@@ -36,10 +36,11 @@ juju config nhc
 Default paths to the log and config files are `/var/snap/nhc/common/var/log/nhc/nhc.log` and `/var/snap/nhc/common/etc/nhc/nhc.conf`, respectively.
 
 ### Autogenerate a config file
+The below command is just to show how the charm generates the config file. Rules containing /snap/ paths are removed, because they give failures too often.
 ```bash
-/snap/nhc/current/usr/sbin/nhc-genconf -c ~/myconf.conf \
+/snap/nhc/current/usr/sbin/nhc-genconf -c /dev/stdout \
 INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
-HELPERDIR=/var/snap/nhc/common/usr/lib/nhc
+HELPERDIR=/var/snap/nhc/common/usr/lib/nhc | grep -v ' /snap/' > ~/myconf.conf
 ```
 
 ### References
