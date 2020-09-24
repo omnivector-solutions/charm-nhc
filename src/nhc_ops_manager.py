@@ -49,7 +49,7 @@ class NhcOpsManager:
             cmd = """/snap/nhc/current/usr/sbin/nhc-genconf -c /dev/stdout \
 INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
 HELPERDIR=/var/snap/nhc/common/usr/lib/nhc | \
-grep -v ' /snap/' > %s""" % (str(self._nhc_config_path))
+grep -v '/snap/' > %s""" % (str(self._nhc_config_path))
 
             logger.debug(f'write_nhc_config(): running "{cmd}"')
             os.system(cmd)
