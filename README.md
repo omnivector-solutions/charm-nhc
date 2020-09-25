@@ -43,7 +43,7 @@ INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
 HELPERDIR=/var/snap/nhc/common/usr/lib/nhc | grep -v '/snap/' > ~/myconf.conf
 ```
 
-### *Important* change to the NHC configuration file
+### _Important_ change to the NHC configuration file
 We need to add `* || HOSTNAME="$HOSTNAME_S"` to the top of `nhc.conf` because otherwise there will be a mismatch between the hostname that NHC picks from `/proc/sys/kernel/hostname` and the shorter version used by slurm. The issue is discussed [here](https://github.com/mej/nhc/issues/19) and [here](https://github.com/mej/nhc/issues/19), and the messages we don't want to see `nhc.log` are the following:
 
 ```
