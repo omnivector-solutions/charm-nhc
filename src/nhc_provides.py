@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 """NHC Provides."""
+import logging
+
 from ops.framework import (
     EventBase,
     EventSource,
     Object,
     ObjectEvents,
 )
+
+logger = logging.getLogger()
 
 
 class SlurmInfoAvailableEvent(EventBase):
@@ -74,6 +78,10 @@ class NhcProvides(Object):
                              health_check_interval, health_check_node_state):
         """Update the relation data."""
         app = self.model.app
+
+        if not self._relation:
+            return
+        
         app_data = self._relation.data[app]
 
         app_data['nhc_bin'] = self._nhc_bin

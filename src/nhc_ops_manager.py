@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 """NhcOpsManager."""
+import logging
 import os
 import subprocess
 import sys
 from pathlib import Path
+
+logger = logging.getLogger()
 
 
 class NhcOpsManager:
@@ -37,11 +40,23 @@ class NhcOpsManager:
             print(f"Cannot install nhc- {e}")
             sys.exit(-1)
 
-    def write_nhc_config(self, nhc_config):
+    def write_nhc_config(self, config_auto, nhc_config):
         """Write the nhc.conf."""
         if self._nhc_config_path.exists():
             self._nhc_config_path.unlink()
-        self._nhc_config_path.write_text(nhc_config)
+
+        if config_auto:
+            cmd = """
+(echo '* || HOSTNAME="$HOSTNAME_S"' &&
+/snap/nhc/current/usr/sbin/nhc-genconf -c /dev/stdout \
+INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
+HELPERDIR=/var/snap/nhc/common/usr/lib/nhc | \
+grep -v '/snap/') > %s""" % (str(self._nhc_config_path))
+
+            logger.debug(f'write_nhc_config(): running "{cmd}"')
+            os.system(cmd)
+        else:
+            self._nhc_config_path.write_text(nhc_config)
 
     def write_nhc_slurm_vars(self, slurm_info):
         """Write the slurm vars."""

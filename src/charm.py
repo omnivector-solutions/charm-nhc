@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""SlurmctldCharm."""
+"""NodeHealthCheckCharm."""
 import copy
 import logging
 from pathlib import Path
@@ -20,6 +20,8 @@ from ops.model import (
 
 logger = logging.getLogger()
 
+VERSION = '1.0.6'
+
 
 class NhcCharm(CharmBase):
     """NhcCharm."""
@@ -29,6 +31,8 @@ class NhcCharm(CharmBase):
     def __init__(self, *args):
         """Initialize charm."""
         super().__init__(*args)
+
+        self.unit.set_workload_version(VERSION)
 
         self._stored.set_default(
             slurm_info=dict()
@@ -74,6 +78,7 @@ class NhcCharm(CharmBase):
         self.unit.status = ActiveStatus("")
 
     def _on_config_changed(self, event):
+        logging.debug('_on_config_changed(): entering')
         conf = self.model.config
 
         if not Path(".installed").exists():
@@ -83,8 +88,11 @@ class NhcCharm(CharmBase):
             event.defer()
             return
 
+        config_auto = conf['nhc-config-autodetect']
+        logging.debug(f'_on_config_changed(): config_auto={config_auto}')
+
         # Write the nhc config
-        self._nhc_ops_manager.write_nhc_config(conf['nhc-config'])
+        self._nhc_ops_manager.write_nhc_config(config_auto, conf['nhc-config'])
         # Update relation data with config values if we are the leader
         if self.model.unit.is_leader():
             health_check_interval = conf['health-check-interval']
