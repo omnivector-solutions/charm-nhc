@@ -20,7 +20,7 @@ from ops.model import (
 
 logger = logging.getLogger()
 
-VERSION = '1.0.6'
+VERSION = '1.0.8'
 
 
 class NhcCharm(CharmBase):
