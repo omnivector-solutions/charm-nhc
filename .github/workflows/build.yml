@@ -14,6 +14,8 @@ jobs:
       - name: Install charmcraft
         run: |
           sudo snap install charmcraft --beta
+          echo 'export PATH=/snap/bin:$PATH' >> $GITHUB_ENV
+
       - name: install tox
         run: | 
           pip install tox
