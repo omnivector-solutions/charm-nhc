@@ -94,7 +94,15 @@ jobs:
       - name: Deploy slurm
         shell: bash
         run: |
-          make deploy-centos7-bundle-on-aws-from-local-with-snap
+          ls -la
+          pwd
+          for charm in slurmctld slurmd slurmdbd; do
+            juju deploy ./$charm.charm --resource slurm=./slurm.resource --series centons --bind nat
+          done
+          juju deploy mysql
+          juju relate slurmdbd mysql
+          juju relate slurmd slurmctld
+          juju relate slurmdbd slurmctld
       - name: Deploy nhc
         shell: bash
         run: |
