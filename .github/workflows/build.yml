@@ -71,6 +71,7 @@ jobs:
           echo "JUJU_DATA=/home/runner/work/rev2/rev2/.local/share/juju" >> $GITHUB_ENV
       - name: contact controller
         run: |
+          ls -la pwd
           echo ${{secrets.JUJU_CIRCLECI_USER_PASSWORD}} | juju login --user circleci
       - name: pull classic snap
         run: |
