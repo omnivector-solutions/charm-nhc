@@ -25,12 +25,13 @@ jobs:
       - name: clone repo
         run: | 
           git clone https://github.com/omnivector-solutions/slurm-charms.git 
-          cd slurm-charms
       - name: lint
         run: |
           make lint
       - name: Build charms
         run: |
+          ls -la
+          pwd
           make charms
           cd ..
       - name: Upload Charms
