@@ -96,8 +96,9 @@ jobs:
         run: |
           ls -la
           pwd
+          cd slurm-charms
           for charm in slurmctld slurmd slurmdbd; do
-            juju deploy ./$charm.charm --resource slurm=./slurm.resource --series centons --bind nat
+            juju deploy ./$charm.charm --resource slurm=../slurm.resource --series centons --bind nat
           done
           juju deploy mysql
           juju relate slurmdbd mysql
