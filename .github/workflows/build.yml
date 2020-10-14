@@ -14,7 +14,7 @@ jobs:
       - name: Install charmcraft
         run: |
           pip install charmcraft --beta
-
+          sudo apt-get -y install python3-pip
       - name: install tox
         run: | 
           pip install tox
