@@ -13,8 +13,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install charmcraft
         run: |
-          sudo snap install charmcraft --beta
-          echo 'export PATH=/snap/bin:$PATH' >> $GITHUB_ENV
+          pip install charmcraft --beta
 
       - name: install tox
         run: | 
