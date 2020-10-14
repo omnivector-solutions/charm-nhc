@@ -21,7 +21,7 @@ jobs:
           pip install tox
       - name: build nhc charm
         run: | 
-          chamrcraft build
+          charmcraft build
       - name: clone repo
         run: | 
           git clone git@github.com:omnivector-solutions/slurm-charms.git
