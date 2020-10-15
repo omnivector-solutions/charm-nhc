@@ -94,8 +94,6 @@ jobs:
       - name: Deploy slurm
         shell: bash
         run: |
-          ls -la
-          pwd
           cd slurm-charms
           for charm in slurmctld slurmd slurmdbd; do
             juju deploy ./$charm.charm --resource slurm=../slurm.resource --series centos7 --bind nat
@@ -112,7 +110,7 @@ jobs:
           juju relate slurmd nhc
       - name: wait
         run: |
-          sleep 5m
+          sleep 8m
       - name: check status
         run: |
           juju status
