@@ -110,7 +110,7 @@ jobs:
           juju relate slurmd nhc
       - name: wait
         run: |
-          sleep 8m
+          sleep 20m
       - name: check status
         run: |
           juju status
