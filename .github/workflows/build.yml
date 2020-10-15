@@ -91,7 +91,7 @@ jobs:
       - name: Download Built Charms
         uses: actions/download-artifact@v2
         with:
-          name: slurm-charms
+          name: rev2
       - name: Deploy slurm
         shell: bash
         run: |
