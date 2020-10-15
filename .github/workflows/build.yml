@@ -102,7 +102,7 @@ jobs:
           juju deploy percona-cluster
           juju relate slurmdbd percona-cluster
           juju relate slurmd slurm-configurator
-          juju relate slurmctldd slurm-configurator
+          juju relate slurmctld slurm-configurator
           juju relate slurmdbd slurm-configurator
       - name: Deploy nhc
         shell: bash
