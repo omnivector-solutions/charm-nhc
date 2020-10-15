@@ -35,7 +35,7 @@ jobs:
       - name: Upload Charms
         uses: actions/upload-artifact@v2
         with:
-          name: slurm-charms
+          name: rev2
           path: |
             nhc.charm
             rev2/Makefile
@@ -95,7 +95,7 @@ jobs:
       - name: Deploy slurm
         shell: bash
         run: |
-          cd slurm-charms
+          cd rev2
           for charm in slurmctld slurm-configurator slurmd slurmdbd; do
             juju deploy ./$charm.charm --resource slurm=../slurm.resource --series centos7 --bind nat
           done
