@@ -123,7 +123,7 @@ jobs:
           juju remove-application slurmctld
           juju remove-application slurmdbd
           juju remove-application slurmd
-          juju remove-application slurm-configurator
+          juju remove-application nhc
           juju remove-application mysql
       - name: check status
         run: |
