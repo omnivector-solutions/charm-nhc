@@ -23,13 +23,13 @@ jobs:
           charmcraft build
       - name: clone repo
         run: | 
-          git clone https://github.com/omnivector-solutions/slurm-charms.git 
+          git clone https://github.com/omnivector-solutions/rev2.git
       - name: lint
         run: |
           make lint
       - name: Build charms
         run: |
-          cd slurm-charms
+          cd rev2
           make charms
           cd ..
       - name: Upload Charms
@@ -38,11 +38,12 @@ jobs:
           name: slurm-charms
           path: |
             nhc.charm
-            slurm-charms/Makefile
-            slurm-charms/bundles
-            slurm-charms/slurmctld.charm
-            slurm-charms/slurmdbd.charm
-            slurm-charms/slurmd.charm
+            rev2/Makefile
+            rev2/bundles
+            rev2/slurmctld.charm
+            rev2/slurmdbd.charm
+            rev2/slurmd.charm
+            rev2/slurm-configurator.charm
  
   deploy-centos7:
     name: "Deploy centos7"
@@ -95,13 +96,14 @@ jobs:
         shell: bash
         run: |
           cd slurm-charms
-          for charm in slurmctld slurmd slurmdbd; do
+          for charm in slurmctld slurm-configurator slurmd slurmdbd; do
             juju deploy ./$charm.charm --resource slurm=../slurm.resource --series centos7 --bind nat
           done
-          juju deploy mysql
-          juju relate slurmdbd mysql
-          juju relate slurmd slurmctld
-          juju relate slurmdbd slurmctld
+          juju deploy percona-cluster
+          juju relate slurmdbd percona-cluster
+          juju relate slurmd slurm-configurator
+          juju relate slurmctldd slurm-configurator
+          juju relate slurmdbd slurm-configurator
       - name: Deploy nhc
         shell: bash
         run: |
