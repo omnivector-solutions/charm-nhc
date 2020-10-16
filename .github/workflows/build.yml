@@ -31,13 +31,13 @@ jobs:
       - name: Upload Charms
         uses: actions/upload-artifact@v2
         with:
-          name: slurm-charms
+          name: rev2
           path: |
             nhc.charm
             slurmctld.charm
             slurmdbd.charm
             slurmd.charm
- 
+  
   deploy-centos7:
     name: "Deploy centos7"
     needs: build-charms
@@ -84,18 +84,19 @@ jobs:
       - name: Download Built Charms
         uses: actions/download-artifact@v2
         with:
-          name: slurm-charms
+          name: rev2
       - name: Deploy slurm
         shell: bash
         run: |
-          cd slurm-charms
-          for charm in slurmctld slurmd slurmdbd; do
+          cd rev2
+          for charm in slurmctld slurm-configurator slurmd slurmdbd; do
             juju deploy ./$charm.charm --resource slurm=../slurm.resource --series centos7 --bind nat
           done
-          juju deploy mysql
-          juju relate slurmdbd mysql
-          juju relate slurmd slurmctld
-          juju relate slurmdbd slurmctld
+          juju deploy percona-cluster
+          juju relate slurmdbd percona-cluster
+          juju relate slurmd slurm-configurator
+          juju relate slurmctld slurm-configurator
+          juju relate slurmdbd slurm-configurator
       - name: Deploy nhc
         shell: bash
         run: |
