@@ -40,7 +40,7 @@ jobs:
   
   deploy-centos7:
     name: "Deploy centos7"
-    needs: build-charms
+    needs: prepare-nhc
     runs-on: "ubuntu-latest"
     steps:
       - name: Configure AWS Credentials
