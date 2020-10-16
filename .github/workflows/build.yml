@@ -90,8 +90,8 @@ jobs:
       - name: Deploy slurm
         shell: bash
         run: |
-          for charm in slurmctld slurm-configurator slurmd slurmdbd; do
-            juju deploy ./$charm.charm --resource slurm=../slurm.resource --series centos7 --bind nat
+          for charm in slurmctld slurmd slurmdbd; do
+            juju deploy ./$charm.charm --resource slurm=./slurm.resource --series centos7 --bind nat
           done
           juju deploy percona-cluster
           juju relate slurmdbd percona-cluster
