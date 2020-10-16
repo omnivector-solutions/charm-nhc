@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install charmcraft
         run: |
-          snap install charmcraft
+          sudo snap install charmcraft
       - name: install tox
         run: | 
           pip install tox
