@@ -1,9 +1,9 @@
-name: TestCharms
+name: TestNHC
   
 on: pull_request
 jobs:
-  build-charms:
-    name: "build charms"
+  prepare-nhc:
+    name: "build nhc charm"
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/setup-python@v1
@@ -13,36 +13,30 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install charmcraft
         run: |
-          pip install charmcraft
-          sudo apt-get -y install python3-pip
+          snap install charmcraft
       - name: install tox
         run: | 
           pip install tox
       - name: build nhc charm
         run: | 
           charmcraft build
-      - name: clone repo
-        run: | 
-          git clone https://github.com/omnivector-solutions/slurm-charms.git 
       - name: lint
         run: |
           make lint
-      - name: Build charms
+      - name: download slurm-charms
         run: |
-          cd slurm-charms
-          make charms
-          cd ..
+          for charm in slurmctld slurmd slurmdbd; do
+            wget https://omnivector-public-assets.s3-us-west-2.amazonaws.com/charms/$charm/edge/$charm.charm
+          done
       - name: Upload Charms
         uses: actions/upload-artifact@v2
         with:
           name: slurm-charms
           path: |
             nhc.charm
-            slurm-charms/Makefile
-            slurm-charms/bundles
-            slurm-charms/slurmctld.charm
-            slurm-charms/slurmdbd.charm
-            slurm-charms/slurmd.charm
+            slurmctld.charm
+            slurmdbd.charm
+            slurmd.charm
  
   deploy-centos7:
     name: "Deploy centos7"
