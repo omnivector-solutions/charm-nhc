@@ -20,7 +20,7 @@ from ops.model import (
 
 logger = logging.getLogger()
 
-VERSION = '1.0.6'
+VERSION = '1.0.9'
 
 
 class NhcCharm(CharmBase):
@@ -32,7 +32,10 @@ class NhcCharm(CharmBase):
         """Initialize charm."""
         super().__init__(*args)
 
-        self.unit.set_workload_version(VERSION)
+        try:
+            self.unit.set_workload_version(VERSION)
+        except ModelError:
+            pass
 
         self._stored.set_default(
             slurm_info=dict()
