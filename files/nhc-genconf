@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+
+
+(echo '* || HOSTNAME="$HOSTNAME_S"' && \
+    /snap/nhc/current/usr/sbin/nhc-genconf -c /dev/stdout \
+    INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
+    HELPERDIR=/var/snap/nhc/common/usr/lib/nhc | \
+    grep -v '/snap/' | grep -v '/run/user/') > /var/snap/nhc/common/etc/nhc/nhc.conf

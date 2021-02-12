@@ -9,12 +9,6 @@ options:
     default: ""
     description: >-
       'User supplied nhc configuration'
-  nhc-config-autodetect:
-    type: boolean
-    default: true
-    description: >-
-      'Autodetect suitable NHC configuration using nhc-genconf.
-       Any configuration line containing the substring " /snap" will be excluded.'
   health-check-interval:
     type: string
     default: "30"

@@ -91,11 +91,8 @@ class NhcCharm(CharmBase):
             event.defer()
             return
 
-        config_auto = conf['nhc-config-autodetect']
-        logging.debug(f'_on_config_changed(): config_auto={config_auto}')
-
         # Write the nhc config
-        self._nhc_ops_manager.write_nhc_config(config_auto, conf['nhc-config'])
+        self._nhc_ops_manager.write_nhc_config(conf['nhc-config'])
         # Update relation data with config values if we are the leader
         if self.model.unit.is_leader():
             health_check_interval = conf['health-check-interval']

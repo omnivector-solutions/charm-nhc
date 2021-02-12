@@ -81,7 +81,7 @@ class NhcProvides(Object):
 
         if not self._relation:
             return
-        
+
         app_data = self._relation.data[app]
 
         app_data['nhc_bin'] = self._nhc_bin

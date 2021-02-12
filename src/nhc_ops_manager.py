@@ -40,20 +40,13 @@ class NhcOpsManager:
             print(f"Cannot install nhc- {e}")
             sys.exit(-1)
 
-    def write_nhc_config(self, config_auto, nhc_config):
+    def write_nhc_config(self, nhc_config=None):
         """Write the nhc.conf."""
         if self._nhc_config_path.exists():
             self._nhc_config_path.unlink()
 
-        if config_auto:
-            cmd = """
-(echo '* || HOSTNAME="$HOSTNAME_S"' &&
-/snap/nhc/current/usr/sbin/nhc-genconf -c /dev/stdout \
-INCDIR=/snap/nhc/current/usr/etc/nhc/scripts/ \
-HELPERDIR=/var/snap/nhc/common/usr/lib/nhc | \
-grep -v '/snap/' | grep -v '/run/user/') > %s""" % (str(self._nhc_config_path))
-
-            logger.debug(f'write_nhc_config(): running "{cmd}"')
+        if not nhc_config:
+            cmd = "./files/nhc-genconf"
             os.system(cmd)
         else:
             self._nhc_config_path.write_text(nhc_config)
