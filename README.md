@@ -27,11 +27,16 @@ juju config nhc
 ```
 
 | Setting                  | Default | Description                                                                                                                                                                                                                |
-|:-------------------------|:--------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:------------------------ |:------- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | debug                    | false   |                                                                                                                                                                                                                            |
 | health-check-interval    | 30      | See above                                                                                                                                                                                                                  |
 | health-check-node-state  | ALL     | See above                                                                                                                                                                                                                  |
-| nhc-config               |         | A multi-line config string for NHC. Config options have the format: `<hostmask> || <check>`. For example, `<hostmask>` can be `*` to run the check on all nodes or a specific hostname (other formats are also available). |
+| nhc-config               |         | A multi-line config string for NHC. Config options have the format: `<hostmask> \|\| <check>`. For example, `<hostmask>` can be `*` to run the check on all nodes or a specific hostname (other formats are also available). |
+
+Example of a configuration line:
+```bash
+* || check_hw_cpuinfo 1 8 16
+```
 
 Default paths to the log and config files are `/var/snap/nhc/common/var/log/nhc/nhc.log` and `/var/snap/nhc/common/etc/nhc/nhc.conf`, respectively.
 
