@@ -46,7 +46,7 @@ class NhcOpsManager:
             self._nhc_config_path.unlink()
 
         if not nhc_config:
-            cmd = "./files/nhc-genconf"
+            cmd = f"{os.environ['JUJU_CHARM_DIR']}/src/nhc-genconf"
             os.system(cmd)
         else:
             self._nhc_config_path.write_text(nhc_config)

@@ -2,6 +2,7 @@
 """NodeHealthCheckCharm."""
 import copy
 import logging
+import os
 from pathlib import Path
 
 
@@ -47,6 +48,7 @@ class NhcCharm(CharmBase):
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
+        self.framework.observe(self.on.remove, self._on_remove)
 
         self.framework.observe(
             self._nhc_provides.on.slurm_info_available,
@@ -104,6 +106,12 @@ class NhcCharm(CharmBase):
 
         self._nhc_ops_manager.set_nhc_debug(conf.get('debug'))
         self.unit.status = ActiveStatus("Config update complete")
+
+
+    def _on_remove(self, event):
+        """Remove the nhc snap on unit removal."""
+        cmd = "snap remove nhc"
+        os.system(cmd)
 
     def _on_slurm_info_changed(self, event):
         if not Path(".installed").exists():
