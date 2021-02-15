@@ -1,0 +1,129 @@
+name: TestNHC
+  
+on: pull_request
+jobs:
+  prepare-nhc:
+    name: "build nhc charm"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - uses: actions/checkout@v1
+      - name: Install charmcraft
+        run: |
+          sudo snap install charmcraft --edge
+          sudo apt-get -y install python3-pip
+
+      - name: install tox
+        run: | 
+          pip install tox
+      - name: build nhc charm
+        run: | 
+          charmcraft build
+      - name: lint
+        run: |
+          make lint
+      - name: download slurm-charms
+        run: |
+          for charm in slurmctld slurmd slurmdbd; do
+            wget https://omnivector-public-assets.s3-us-west-2.amazonaws.com/charms/$charm/edge/$charm.charm
+          done
+      - name: Upload Charms
+        uses: actions/upload-artifact@v2
+        with:
+          name: slurm-charms
+          path: |
+            nhc.charm
+            slurmctld.charm
+            slurmdbd.charm
+            slurmd.charm
+  
+  deploy-centos7:
+    name: "Deploy centos7"
+    needs: prepare-nhc
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: lint
+        uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: install juju
+        run: | 
+          sudo snap install juju --classic
+      - name: pull controller credentials
+        run: |
+          aws s3 cp s3://omnivector-cicd/juju-local/juju-local.tar.gz .
+          tar -xzvf juju-local.tar.gz
+          echo "JUJU_DATA=/home/runner/work/charm-nhc/charm-nhc/.local/share/juju" >> $GITHUB_ENV
+      - name: contact controller
+        run: |
+          ls -la
+          pwd
+          echo ${{secrets.JUJU_CIRCLECI_USER_PASSWORD}} | juju login --user circleci
+      - name: pull classic snap
+        run: |
+          wget https://github.com/omnivector-solutions/snap-slurm/releases/download/20.02/slurm_20.02.1_amd64_classic.snap -O slurm.resource
+      - name: Store SHA
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: add model
+        run: |
+          juju add-model git-${{ steps.vars.outputs.sha_short }}-centos7
+          juju add-space -m git-${{ steps.vars.outputs.sha_short }}-centos7 nat 172.31.90.0/24 172.31.91.0/24 172.31.92.0/24 172.31.93.0/24
+          juju model-config logging-config="<root>=DEBUG;juju.worker.dependency=CRITICAL;unit=DEBUG"
+      - name: Download Built Charms
+        uses: actions/download-artifact@v2
+        with:
+          name: slurm-charms
+      - name: Deploy slurm
+        shell: bash
+        run: |
+          for charm in slurmctld slurmd slurmdbd; do
+            juju deploy ./$charm.charm --resource slurm=./slurm.resource --series centos7 --bind nat
+          done
+          juju deploy percona-cluster
+          juju relate slurmdbd percona-cluster
+          juju relate slurmd slurmctld
+          juju relate slurmdbd slurmctld
+      - name: Deploy nhc
+        shell: bash
+        run: |
+          wget https://omnivector-public-assets.s3-us-west-2.amazonaws.com/snaps/nhc/edge/nhc_1.4.2-omni_amd64.snap -O nhc.snap
+          juju deploy ./nhc.charm --resource nhc=./nhc.snap
+          juju relate slurmd nhc
+      - name: wait
+        run: |
+          sleep 20m
+      - name: check status
+        run: |
+          juju status
+      - name: cluster health
+        run: |
+          juju run "sinfo" --unit slurmd/0
+      - name: remove charms
+        if: ${{ always() }}
+        run: |
+          juju remove-application slurmctld
+          juju remove-application slurmdbd
+          juju remove-application slurmd
+          juju remove-application nhc
+          juju remove-application mysql
+      - name: check status
+        run: |
+          juju status
+      - name: delete model
+        if: ${{ always() }}
+        run: |
+          juju destroy-model --force -y git-${{ steps.vars.outputs.sha_short }}-centos7
